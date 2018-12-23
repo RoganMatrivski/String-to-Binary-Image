@@ -41,9 +41,22 @@ namespace DataToBinaryImage
 
         public static string text_to_render;
 
+        private static readonly Regex binaryregex = new Regex("[^0-1.-]+"); //regex that matches disallowed text
         private void update_preview(string string_text)
         {
             text_to_render = string_text;
+
+            bool[] booldata = new bool[0];
+
+            if (!binaryregex.IsMatch(text_to_render))
+            {
+                booldata = new bool[text_to_render.Length];
+
+                for (int i = 0; i < text_to_render.Length; i++)
+                {
+                    booldata[i] = Convert.ToBoolean(char.GetNumericValue(text_to_render[i]));
+                }
+            }
 
             if (ImageView == null || imgsize == null || imgsize_scaled == null || ScaleOption == null)
                 return;
@@ -67,7 +80,10 @@ namespace DataToBinaryImage
 
                 try
                 {
-                    result = ImageRenderer.RenderToBWImg(Encoding.UTF8.GetBytes(text), 1, invert_checkbox.IsChecked ?? false, width, height);
+                    if (booldata == null || booldata.Length == 0)
+                        result = ImageRenderer.RenderToBWImg(Encoding.UTF8.GetBytes(text), 1, invert_checkbox.IsChecked ?? false, width, height);
+                    else
+                        result = ImageRenderer.RenderToBWImg(booldata, 1, invert_checkbox.IsChecked ?? false, width, height);
                 }
                 catch(ImageTooSmall ex)
                 {
@@ -82,6 +98,7 @@ namespace DataToBinaryImage
                     imgsize.Content = $"Current Size : {result.PixelWidth}x{result.PixelHeight}";
                     imgsize_scaled.Content = $"Current Scaled Size : {result.PixelWidth * ((scale_options)ScaleOption.SelectedItem).value}x{result.PixelHeight * ((scale_options)ScaleOption.SelectedItem).value}";
                     status_label.Content = "";
+                    status_label.Foreground = new SolidColorBrush(Colors.Black);
                 }
                 else
                 {
@@ -90,7 +107,7 @@ namespace DataToBinaryImage
                     imgsize.Content = $"Current Size : NaN";
                     imgsize_scaled.Content = $"Current Scaled Size : NaN";
                     status_label.Content = errmessage;
-                    
+                    status_label.Foreground = new SolidColorBrush(Colors.Red);
                 }
             }
         }
@@ -228,35 +245,35 @@ namespace DataToBinaryImage
 
         private void MainForm_Loaded(object sender, RoutedEventArgs e)
         {
-            runningtask = Task.Run(async () =>
-            {
-                char[] charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
-                Random rand = new Random();
+            //runningtask = Task.Run(async () =>
+            //{
+            //    char[] charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
+            //    Random rand = new Random();
 
-                while (true)
-                {
-                    //this.Dispatcher.Invoke(() => MaxWidth.Text = rand.Next(2, 32).ToString());
+            //    while (true)
+            //    {
+            //        //this.Dispatcher.Invoke(() => MaxWidth.Text = rand.Next(2, 32).ToString());
 
-                    int remaining = rand.Next(8, 64);
-                    while (remaining-- > 0)
-                    {
+            //        int remaining = rand.Next(8, 64);
+            //        while (remaining-- > 0)
+            //        {
 
-                        int word = rand.Next(4, 10);
-                        while (word-- > 0)
-                        {
-                            this.Dispatcher.Invoke(() => msg_string.Text += charset[rand.Next(charset.Length)]);
-                            await Task.Delay(3);
+            //            int word = rand.Next(4, 10);
+            //            while (word-- > 0)
+            //            {
+            //                this.Dispatcher.Invoke(() => msg_string.Text += charset[rand.Next(charset.Length)]);
+            //                await Task.Delay(3);
 
-                        }
+            //            }
 
-                        this.Dispatcher.Invoke(() => msg_string.Text += " ");
+            //            this.Dispatcher.Invoke(() => msg_string.Text += " ");
 
-                        if (rand.NextDouble() > 0.85)
-                            this.Dispatcher.Invoke(() => msg_string.Text += "\n");
-                    }
-                    this.Dispatcher.Invoke(() => msg_string.Text = "");
-                }
-            });
+            //            if (rand.NextDouble() > 0.85)
+            //                this.Dispatcher.Invoke(() => msg_string.Text += "\n");
+            //        }
+            //        this.Dispatcher.Invoke(() => msg_string.Text = "");
+            //    }
+            //});
         }
 
         private async void seq_save_Click(object sender, RoutedEventArgs e)

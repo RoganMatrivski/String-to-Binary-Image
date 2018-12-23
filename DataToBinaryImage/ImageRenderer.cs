@@ -257,6 +257,120 @@ static class ImageRenderer
         return BitmapSource.Create(width * scaling, height * scaling, 300, 300, PixelFormats.Indexed8, BitmapPalettes.Gray256, scaled, stride * scaling);
     }
 
+    public static BitmapSource RenderToBWImg(bool[] src, int scaling = 1, bool reversed = false, int maxwidth = 0, int maxheight = 0)
+    {
+        if (src.Length == 0)
+            return null;
+
+        BitArray bitdata = new BitArray(src);
+
+        int imgdimension = (int)Math.Ceiling(Math.Sqrt(bitdata.Length));
+
+        int stride = imgdimension;
+
+        if (imgdimension > maxwidth * maxheight)
+        {
+
+        }
+
+        int width = imgdimension;
+        int height = imgdimension;
+
+        if (maxwidth != 0 && maxheight == 0)
+        {
+            width = maxwidth;
+            height = (int)Math.Ceiling(bitdata.Length / (double)width);
+        }
+        
+        else if(maxheight != 0 && maxwidth == 0)
+        {
+            height = maxheight;
+            width = (int)Math.Ceiling(bitdata.Length / (double)height);}
+        
+        else if(maxheight != 0 && maxwidth != 0)
+        {
+            height = maxheight;
+            width = maxwidth;
+        }
+
+        stride = width;
+
+        //if (maxwidth != 0)
+        //{
+        //    width = maxwidth;
+        //    stride = width;
+
+        //    height = (int)Math.Ceiling(bitdata.Length / (double)width);
+        //}
+
+        //if (maxheight != 0)
+        //{
+        //    height = maxheight;
+        //}
+
+        if (width * height < bitdata.Length)
+            //throw new ;
+            throw new ImageTooSmall("Image is too small for the data");
+
+        #region Abandoned Code
+        //Abandoning this for a more better solution
+        //
+        //int stride = imgdimension * 4;
+
+        //byte[] pixel_data = new byte[imgdimension * imgdimension * 4];
+
+        //for (int i = 0; i < imgdimension; i++)
+        //{
+        //    for (int j = 0; j < imgdimension * 4; j += 4)
+        //    {
+        //        int datapos = j + (i * (imgdimension * 4));
+        //        int bitpos = (j / 4) + (i * imgdimension);
+
+        //        if (bitdata[bitpos])
+        //        {
+        //            pixel_data[datapos      ] = 255;
+        //            pixel_data[datapos + 1  ] = 255;
+        //            pixel_data[datapos + 2  ] = 255;
+        //            pixel_data[datapos + 3  ] = 255;
+        //        }
+        //        else
+        //        {
+        //            pixel_data[datapos + 3] = 255;
+        //        }
+        //    }
+        //}
+        #endregion
+
+        byte[] pixel_data = new byte[width * height];
+
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                int pos = j + (i * width);
+
+                if (pos >= bitdata.Length)
+                    break;
+
+                //Yeah i know this is a silly one.
+                if (!reversed)
+                    if (bitdata[pos])
+                        pixel_data[pos] = 255;
+                    else
+                        pixel_data[pos] = 0;
+                else
+                    if (!bitdata[pos])
+                        pixel_data[pos] = 255;
+                    else
+                        pixel_data[pos] = 0;
+            }
+        }
+
+        var scaled = resizePixels(pixel_data, width, height, width * scaling, height * scaling);
+
+        return BitmapSource.Create(width * scaling, height * scaling, 300, 300, PixelFormats.Indexed8, BitmapPalettes.Gray256, scaled, stride * scaling);
+    }
+
     //Using this code from this site : 
     //http://tech-algorithm.com/articles/nearest-neighbor-image-scaling/
     public static byte[] resizePixels(byte[] pixels, int _w1, int _h1, int _w2, int _h2)
