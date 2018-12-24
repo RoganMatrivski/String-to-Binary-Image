@@ -15,15 +15,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Windows;
 
-class ImageTooSmall : Exception
+class ImageTooSmallException : Exception
 {
-    public ImageTooSmall()
+    public ImageTooSmallException()
     { }
 
-    public ImageTooSmall(string message) : base(message)
+    public ImageTooSmallException(string message) : base(message)
     { }
 
-    public ImageTooSmall(string message, Exception inner) : base(message, inner)
+    public ImageTooSmallException(string message, Exception inner) : base(message, inner)
     { }
 
 
@@ -37,12 +37,10 @@ static class ImageRenderer
         {
             case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
                 return 24;
-                break;
             case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
             case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
             case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
                 return 32;
-                break;
             default:
                 throw new ArgumentException("Only 24 and 32 bit images are supported");
 
@@ -196,7 +194,7 @@ static class ImageRenderer
 
         if (width * height < bitdata.Length)
             //throw new ;
-            throw new ImageTooSmall("Image is too small for the data");
+            throw new ImageTooSmallException("Image is too small for the data");
 
         #region Abandoned Code
         //Abandoning this for a more better solution
@@ -310,7 +308,7 @@ static class ImageRenderer
 
         if (width * height < bitdata.Length)
             //throw new ;
-            throw new ImageTooSmall("Image is too small for the data");
+            throw new ImageTooSmallException("Image is too small for the data");
 
         #region Abandoned Code
         //Abandoning this for a more better solution

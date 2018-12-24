@@ -1,7 +1,6 @@
 C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\bin\Debug\DataToBinaryImage.exe.config
 C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\bin\Debug\DataToBinaryImage.exe
 C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\bin\Debug\DataToBinaryImage.pdb
-C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\obj\Debug\DataToBinaryImage.csprojAssemblyReference.cache
 C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\obj\Debug\MainWindow.g.cs
 C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\obj\Debug\App.g.cs
 C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\obj\Debug\DataToBinaryImage_MarkupCompile.cache
@@ -13,7 +12,3 @@ C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\obj\Debug\DataT
 C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\obj\Debug\DataToBinaryImage.csproj.CoreCompileInputs.cache
 C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\obj\Debug\DataToBinaryImage.exe
 C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\obj\Debug\DataToBinaryImage.pdb
-C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\bin\Debug\WriteableBitmapEx.Wpf.dll
-C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\bin\Debug\WriteableBitmapEx.Wpf.pdb
-C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\bin\Debug\WriteableBitmapEx.Wpf.xml
-C:\Users\Morgan\source\repos\DataToBinaryImage\DataToBinaryImage\obj\Debug\DataToBinaryImage.csproj.CopyComplete

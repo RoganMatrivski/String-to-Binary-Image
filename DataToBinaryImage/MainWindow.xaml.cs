@@ -18,17 +18,6 @@ using Microsoft.Win32;
 
 namespace DataToBinaryImage
 {
-    public class Update_Preview : INotifyPropertyChanged
-    {
-        // Declare the event
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public Update_Preview()
-        {
-
-        }
-    }
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -41,7 +30,7 @@ namespace DataToBinaryImage
 
         public static string text_to_render;
 
-        private static readonly Regex binaryregex = new Regex("[^0-1.-]+"); //regex that matches disallowed text
+        private static readonly Regex binaryregex = new Regex("[^0-1]+"); //regex that matches disallowed text
         private void update_preview(string string_text)
         {
             text_to_render = string_text;
@@ -85,7 +74,7 @@ namespace DataToBinaryImage
                     else
                         result = ImageRenderer.RenderToBWImg(booldata, 1, invert_checkbox.IsChecked ?? false, width, height);
                 }
-                catch(ImageTooSmall ex)
+                catch(ImageTooSmallException)
                 {
                     result = null;
                     errmessage = "Image Too Small For Data";
@@ -94,6 +83,7 @@ namespace DataToBinaryImage
                 if (result != null)
                 {
                     ImageView.Source = result;
+                    ImageView.Stretch = Stretch.Uniform;
 
                     imgsize.Content = $"Current Size : {result.PixelWidth}x{result.PixelHeight}";
                     imgsize_scaled.Content = $"Current Scaled Size : {result.PixelWidth * ((scale_options)ScaleOption.SelectedItem).value}x{result.PixelHeight * ((scale_options)ScaleOption.SelectedItem).value}";
@@ -102,7 +92,8 @@ namespace DataToBinaryImage
                 }
                 else
                 {
-                    ImageView.Source = new BitmapImage(new Uri(@"/DataToBinaryImage;component/resource/broken.png", UriKind.Relative));
+                    ImageView.Source = new BitmapImage(new Uri("pack://application:,,,/broken.png"));
+                    ImageView.Stretch = Stretch.None;
 
                     imgsize.Content = $"Current Size : NaN";
                     imgsize_scaled.Content = $"Current Scaled Size : NaN";
@@ -215,7 +206,7 @@ namespace DataToBinaryImage
             ScaleOption.SelectedIndex = 0;
         }
 
-        private static readonly Regex _regex = new Regex("[^0-9.-]+"); //regex that matches disallowed text
+        private static readonly Regex _regex = new Regex("[^0-9]+"); //regex that matches disallowed text
         private static bool IsTextAllowed(string text)
         {
             return !_regex.IsMatch(text);
@@ -241,7 +232,7 @@ namespace DataToBinaryImage
             update_preview(msg_string.Text);
         }
 
-        private static Task runningtask;
+        //private static Task runningtask;
 
         private void MainForm_Loaded(object sender, RoutedEventArgs e)
         {
@@ -323,6 +314,37 @@ namespace DataToBinaryImage
                     });
                 }
             });
+        }
+
+        private Task runtask;
+        private void easteregg_Click(object sender, RoutedEventArgs e)
+        {
+            if (runtask == null || runtask.IsCompleted)
+                runtask = Task.Run(async () =>
+                {
+                    const string loss = "0000010000001000101000010001010100100010101000000100000111111111110000010000001010101000010101010000101010111000000100000";
+
+                    this.Dispatcher.Invoke(() => msg_string.Text = "");
+                    this.Dispatcher.Invoke(() => MaxHeight.Text = "");
+                    this.Dispatcher.Invoke(() => MaxWidth.Text = "");
+
+                    foreach (var item in loss)
+                    {
+                        this.Dispatcher.Invoke(() => msg_string.Text += item);
+
+                        await Task.Delay(10);
+                    }
+
+                    this.Dispatcher.Invoke(() => invert_checkbox.IsChecked = true);
+
+                    await Task.Delay(3000);
+
+                    System.Diagnostics.Process.Start("https://www.youtube.com/watch?v=ZcoqR9Bwx1Y");
+
+                    await Task.Delay(7000);
+
+                    System.Diagnostics.Process.Start("https://pm1.narvii.com/6631/36671839389f4e334f66c6e1f24ddf08fd45de9f_hq.jpg");
+                });
         }
     }
 
